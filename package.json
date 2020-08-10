@@ -1,0 +1,23 @@
+{
+  "name": "autoattendant",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StevenAbraham6/autoAttendant.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/StevenAbraham6/autoAttendant/issues"
+  },
+  "homepage": "https://github.com/StevenAbraham6/autoAttendant#readme",
+  "dependencies": {
+    "moment-timezone": "^0.5.31",
+    "webex": "^1.88.1"
+  }
+}

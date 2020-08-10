@@ -1,0 +1,83 @@
+const Webex = require(`webex`);
+var moment = require('moment-timezone');
+
+
+//required ENV variables 
+//botId : botID from webex teams documentation
+//responseText : text to reply after hours 
+//roomId : space id 
+//timezone : timezone from moment.js site 
+
+
+
+//needs to customized for each country 
+var holidays=["August 11th 2020", "August 28th 2020","October 2nd 2020","October 26th 2020","November 16th 2020","December 25th 2020"]
+
+var timezone=process.env.timezone
+
+var previousAlertTiming=moment().tz(timezone)
+
+
+
+//var timezone="Asia/Kolkata"
+
+function isWeekend(){
+    var now = moment().tz(timezone)
+    if(now.format('dddd')=="Sunday"||now.format('dddd')=="Saturday")
+        return true
+    else
+        return false 
+}
+
+function isPublicHoliday(){
+    var now = moment().tz(timezone).format('MMMM Do YYYY')
+    return holidays.includes(now)
+}
+
+function isOfficeHours(){
+
+    var now = moment().tz(timezone)
+    
+    if (now > moment.tz(moment().format('MMMM Do YYYY')+", 09:00:00 am", "MMMM Do YYYY, h:mm:ss a", timezone)){
+        if (now < moment.tz(moment().format('MMMM Do YYYY')+", 05:00:00 pm", "MMMM Do YYYY, h:mm:ss a", timezone)){
+            return true
+        }
+        else
+            return false
+    }
+    else 
+        return false 
+}
+
+const webex = Webex.init({
+    credentials: {
+      access_token: process.env.botId
+      //access_token: "ZjM5NGUwNjYtOWJjMS00ZDkyLWJkYjQtZTg5M2EzZmUzM2FmZDQxYzgzZDQtYTVj_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f"
+    }
+  });
+
+
+
+exports.handler = function(event, context, callback){
+
+    if(event.data.personEmail!="pharm@webex.bot"){
+        if ((isPublicHoliday()||isWeekend()||!isOfficeHours())&&(moment().tz(timezone)-previousAlertTiming>180000)){
+            previousAlertTiming=moment().tz(timezone)
+            webex.messages.create({
+                //markdown: ''+process.env.responseText+'',
+                markdown: event.data,
+                roomId: process.env.roomId
+                //roomId: "Y2lzY29zcGFyazovL3VzL1JPT00vN2NjMWU0ZDAtZGExZC0xMWVhLThiMDUtMTFjZDJhNmY3NTYy"
+            })
+        }
+    }
+    const response = {
+        statusCode: 200,
+        body: JSON.stringify(console.log(process.env.roomId)),
+    };
+
+
+callback(null,204)
+}
+
+
