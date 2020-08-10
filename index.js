@@ -12,6 +12,10 @@ var moment = require('moment-timezone');
 
 //STEP 3: ADD HOLIDAY LIST in code 
 
+//STEP 3: Choose weekend days 
+
+//STEP 4: Choose working hours  
+
 
 //needs to customized for each country 
 var holidays=["August 11th 2020", "August 28th 2020","October 2nd 2020","October 26th 2020","November 16th 2020","December 25th 2020"]
@@ -36,7 +40,7 @@ function isPublicHoliday(){
 function isOfficeHours(){
     var now = moment().tz(timezone)
     if (now > moment.tz(moment().format('MMMM Do YYYY')+", 09:00:00 am", "MMMM Do YYYY, h:mm:ss a", timezone)){
-        if (now < moment.tz(moment().format('MMMM Do YYYY')+", 05:00:00 pm", "MMMM Do YYYY, h:mm:ss a", timezone)){
+        if (now < moment.tz(moment().format('MMMM Do YYYY')+", 05:30:00 pm", "MMMM Do YYYY, h:mm:ss a", timezone)){
             return true
         }
         else
