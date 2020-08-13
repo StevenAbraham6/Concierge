@@ -41,8 +41,8 @@ function isPublicHoliday(){
 
 function isOfficeHours(){
     var now = moment().tz(timezone)
-    if (now > moment.tz(moment().format('MMMM Do YYYY')+", 09:00:00 am", "MMMM Do YYYY, h:mm:ss a", timezone)){
-        if (now < moment.tz(moment().format('MMMM Do YYYY')+", 05:30:00 pm", "MMMM Do YYYY, h:mm:ss a", timezone)){
+    if (now > moment.tz(moment().format('MMMM Do YYYY')+", 08:00:00 am", "MMMM Do YYYY, h:mm:ss a", timezone)){
+        if (now < moment.tz(moment().format('MMMM Do YYYY')+", 06:00:00 pm", "MMMM Do YYYY, h:mm:ss a", timezone)){
             return true
         }
         else
@@ -64,7 +64,16 @@ const webex = Webex.init({
 exports.handler = function(event, context, callback){
 
     if(event.data.personEmail!="pharm@webex.bot"){
-        if ((isPublicHoliday()||isWeekend()||!isOfficeHours())&&(moment().tz(timezone)-previousAlertTiming>180000)){
+        if((isPublicHoliday())&&(moment().tz(timezone)-previousAlertTiming>180000)){
+            previousAlertTiming=moment().tz(timezone)
+            webex.messages.create({
+                markdown: ''+process.env.responseTextPublicHoliday+'',
+                //markdown: "this is a test",
+                roomId: process.env.roomId
+                //roomId: "Y2lzY29zcGFyazovL3VzL1JPT00vN2NjMWU0ZDAtZGExZC0xMWVhLThiMDUtMTFjZDJhNmY3NTYy"
+            })
+        }
+        else if ((isWeekend()||!isOfficeHours())&&(moment().tz(timezone)-previousAlertTiming>180000)){
             previousAlertTiming=moment().tz(timezone)
             webex.messages.create({
                 markdown: ''+process.env.responseText+'',
