@@ -63,7 +63,7 @@ const webex = Webex.init({
 
 exports.handler = function(event, context, callback){
 
-    if(event.data.personEmail!="pharm@webex.bot"){
+    if(event.data.personEmail!="tsn_concierge@webex.bot"){
         if((isPublicHoliday())&&(moment().tz(timezone)-previousAlertTiming>180000)){
             previousAlertTiming=moment().tz(timezone)
             webex.messages.create({
